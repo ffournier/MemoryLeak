@@ -143,6 +143,11 @@ public class MainActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 		
+		
+		// do a leak
+		myThread thread = new myThread();
+		thread.start();
+		
 	}
 	
 	@Override
@@ -154,5 +159,22 @@ public class MainActivity extends ActionBarActivity {
 		throw error;
 	}
 	
+	
+	private class myThread extends Thread {
+
+		@Override
+		public void run() {
+			super.run();
+			
+			while (true) {
+				try {
+					sleep(1000);
+				} catch (InterruptedException e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		
+	}
 	
 }
