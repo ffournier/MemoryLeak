@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Debug;
 import android.support.v7.app.ActionBarActivity;
@@ -31,22 +32,21 @@ public class MainActivity extends ActionBarActivity {
 			
 			@Override
 			public void onClick(View v) {
-				// TODO Auto-generated method stub
-				logHeap();
+				logHeap(MainActivity.this);
 			}
 		});
 	}
 	
 	/**
 	 * log heap by Debug
-	 * @param df
+	 * @param df : the format display
 	 */
-	private void logDebugHeap(DecimalFormat df) {
-		Log.d(getClass().getSimpleName(), "Debug. logHeap =================================");
+	private static void logDebugHeap(DecimalFormat df) {
+		Log.d("mytag", "Debug. logHeap =================================");
         Double allocated = new Double(Debug.getNativeHeapAllocatedSize())/ 1048576.0;
         Double available = new Double(Debug.getNativeHeapSize())/1048576.0;
         Double free = new Double(Debug.getNativeHeapFreeSize())/1048576.0;
-        Log.d(getClass().getSimpleName(), "Debug.heap native: allocated " + df.format(allocated) + "MB of " + 
+        Log.d("mytag", "Debug.heap native: allocated " + df.format(allocated) + "MB of " + 
         																	df.format(available) + "MB (" + 
         																	df.format(free) + "MB free)");
         
@@ -56,27 +56,27 @@ public class MainActivity extends ActionBarActivity {
 		android.os.Debug.MemoryInfo memInfoDebug = new Debug.MemoryInfo();
 		Debug.getMemoryInfo(memInfoDebug);
 		if (memInfoDebug != null) {
-			Log.w(getClass().getSimpleName(), "Debug.heap : totalPrivateDirty " + df.format((memInfoDebug.getTotalPrivateDirty()/ 1024.0) + "MB"));
-			Log.w(getClass().getSimpleName(), "Debug.heap : totalPss " + df.format((memInfoDebug.getTotalPss()/ 1024.0) + "MB"));
-			Log.w(getClass().getSimpleName(), "Debug.heap : totalSharedDirty " + df.format((memInfoDebug.getTotalSharedDirty()/ 1024.0) + "MB"));
+			/*Log.w("mytag", "Debug.heap : totalPrivateDirty " + df.format((memInfoDebug.getTotalPrivateDirty()/ 1024.0) + "MB"));
+			Log.w("mytag", "Debug.heap : totalPss " + df.format((memInfoDebug.getTotalPss()/ 1024.0) + "MB"));
+			Log.w("mytag", "Debug.heap : totalSharedDirty " + df.format((memInfoDebug.getTotalSharedDirty()/ 1024.0) + "MB"));
 			int currentapiVersion = android.os.Build.VERSION.SDK_INT;
 			if (currentapiVersion >= android.os.Build.VERSION_CODES.KITKAT){
-				Log.w(getClass().getSimpleName(), "Debug.heap : totalSharedClean " + df.format((memInfoDebug.getTotalSharedClean()/ 1024.0) + "MB"));
-				Log.w(getClass().getSimpleName(), "Debug.heap : totalPrivateClean " + df.format((memInfoDebug.getTotalPrivateClean()/ 1024.0) + "MB"));
-				Log.w(getClass().getSimpleName(), "Debug.heap : totalSwappablePss " + df.format((memInfoDebug.getTotalSwappablePss()/ 1024.0) + "MB"));
-			}
+				Log.w("mytag", "Debug.heap : totalSharedClean " + df.format((memInfoDebug.getTotalSharedClean()/ 1024.0) + "MB"));
+				Log.w("mytag", "Debug.heap : totalPrivateClean " + df.format((memInfoDebug.getTotalPrivateClean()/ 1024.0) + "MB"));
+				Log.w("mytag", "Debug.heap : totalSwappablePss " + df.format((memInfoDebug.getTotalSwappablePss()/ 1024.0) + "MB"));
+			}*/
 				
 		}
 	}
 	
 	/**
 	 * log heap by Runtime
-	 * @param df
+	 * @param df : the format display
 	 */
-	private void logRuntimeHeap(DecimalFormat df) {
+	private static void logRuntimeHeap(DecimalFormat df) {
 		
-		Log.d(getClass().getSimpleName(), "Runtime. logHeap =================================");
-	    Log.d(getClass().getSimpleName(), "Runtime.Memory: allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory()/1048576)) + "MB of " + 
+		Log.d("mytag", "Runtime. logHeap =================================");
+	    Log.d("mytag", "Runtime.Memory: allocated: " + df.format(new Double(Runtime.getRuntime().totalMemory()/1048576)) + "MB of " + 
 	        																df.format(new Double(Runtime.getRuntime().maxMemory()/1048576))+ "MB (" + 
 	        																df.format(new Double(Runtime.getRuntime().freeMemory()/1048576)) +"MB free)");
 	
@@ -84,26 +84,28 @@ public class MainActivity extends ActionBarActivity {
 	
 	/**
 	 * log heap by the ActivityManager
-	 * @param df
+	 * @param context : Context to have access to the function getSystemService
+	 * @param df : the format display
 	 */
-	private void logActivityManagerHeap(DecimalFormat df) {
+	private static void logActivityManagerHeap(Context context, DecimalFormat df) {
 		
-		Log.d(getClass().getSimpleName(), "ActivityManager. logHeap =================================");
-	    ActivityManager actManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+		Log.d("mytag", "ActivityManager. logHeap =================================");
+	    ActivityManager actManager = (ActivityManager) context.getSystemService(ACTIVITY_SERVICE);
 		MemoryInfo memInfo = new ActivityManager.MemoryInfo();
 		actManager.getMemoryInfo(memInfo);
 		if (memInfo != null) {
-			Log.w(getClass().getSimpleName(), "ActivityManager.heap : total " + df.format(memInfo.totalMem / 1048576.0) + "MB of " + 
+			Log.w("mytag", "ActivityManager.heap : total " + df.format(memInfo.totalMem / 1048576.0) + "MB of " + 
 																				df.format(memInfo.availMem / 1048576.0) + "MB (" +
 																				df.format(memInfo.threshold / 1048576.0) + "MB threshold  and " +
-																				(memInfo.lowMemory ? "islowmemory" : "isnotlowMemory"));
+																				(memInfo.lowMemory ? "is lowmemory" : "is not lowmemory"));
 		}
 	}
 	
 	/**
 	 * Log all heap find in API
+	 * @param context : Context to have access to the function getSystemService
 	 */
-	private void logHeap() {
+	private static void logHeap(Context context) {
         // format log
         DecimalFormat df = new DecimalFormat();
         df.setMaximumFractionDigits(3);
@@ -116,7 +118,7 @@ public class MainActivity extends ActionBarActivity {
         logRuntimeHeap(df);
         
         // ActivityManagerHeap
-        logActivityManagerHeap(df);
+        logActivityManagerHeap(context,df);
         
     }
 
