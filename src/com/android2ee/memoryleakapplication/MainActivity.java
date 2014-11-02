@@ -5,6 +5,7 @@ import java.text.DecimalFormat;
 import android.app.ActivityManager;
 import android.app.ActivityManager.MemoryInfo;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Debug;
 import android.support.v7.app.ActionBarActivity;
@@ -27,12 +28,33 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		
-		Button button = (Button) findViewById(R.id.mybutton);
-		button.setOnClickListener(new OnClickListener() {
+		Button buttonLog = (Button) findViewById(R.id.mybuttonLog);
+		buttonLog.setOnClickListener(new OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
 				logHeap(MainActivity.this);
+			}
+		});
+		
+		Button buttonLeak = (Button) findViewById(R.id.mybuttonLeak);
+		buttonLeak.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent intent = new Intent(MainActivity.this, LeakActivity.class);
+				startActivity(intent);
+			}
+		});
+		
+		Button buttonError = (Button) findViewById(R.id.mybuttonError);
+		buttonError.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// generate an error
+				OutOfMemoryError error = new OutOfMemoryError("my generated error");
+				throw error;
 			}
 		});
 	}
@@ -145,38 +167,13 @@ public class MainActivity extends ActionBarActivity {
 	protected void onResume() {
 		super.onResume();
 		
-		
-		// do a leak
-		myThread thread = new myThread();
-		thread.start();
-		
 	}
 	
 	@Override
 	protected void onPause() {
 		super.onPause();
 		
-		// generate an error
-		OutOfMemoryError error = new OutOfMemoryError("my generated error");
-		throw error;
 	}
 	
-	
-	private class myThread extends Thread {
-
-		@Override
-		public void run() {
-			super.run();
-			
-			while (true) {
-				try {
-					sleep(1000);
-				} catch (InterruptedException e) {
-					e.printStackTrace();
-				}
-			}
-		}
-		
-	}
 	
 }
