@@ -3,6 +3,7 @@ package com.android2ee.memoryleakapplication;
 import android.app.Activity;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.TextView;
 
 /**
@@ -62,7 +63,7 @@ public class LeakActivity extends Activity {
 				try {
 					sleep(1000);
 				} catch (InterruptedException e) {
-					e.printStackTrace();
+					Log.e(getClass().getSimpleName(), e.getMessage());
 				}
 			}
 		}

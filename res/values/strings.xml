@@ -7,6 +7,6 @@
     <string name="dump_memory_logcat">Dump Memory</string>
     <string name="leak_memory">Leak Memory</string>
     <string name="error_memory">Error Memory</string>
-    <string name="leak_bad">Leaks are bad</string>
+    <string name="test">test</string>
 
 </resources>

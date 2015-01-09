@@ -29,7 +29,7 @@ public class HeapDumpingUncaughtExceptionHandler implements Thread.UncaughtExcep
 				// Dump "hprof" data to the specified file. This may cause a GC.
 				Debug.dumpHprofData(absPath);
 			} catch (IOException e) {
-				e.printStackTrace();
+				Log.e(getClass().getSimpleName(), e.getMessage());
 			}
 		}
 	}
