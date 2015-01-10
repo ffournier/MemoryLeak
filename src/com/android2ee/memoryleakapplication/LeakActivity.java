@@ -20,7 +20,7 @@ public class LeakActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		TextView label = new TextView(this);
-		label.setText(getString(R.string.leak_bad));
+		label.setText(getString(R.string.test));
 		  
 		// do a leak that's detect by MAT
 		if (sBackground == null) {
